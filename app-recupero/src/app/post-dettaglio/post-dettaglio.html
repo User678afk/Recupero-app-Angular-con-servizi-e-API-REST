@@ -1,0 +1,40 @@
+<div class="mb-3">
+  <a routerLink="/posts" class="btn btn-outline-secondary">&larr; Torna all'elenco</a>
+</div>
+
+<!-- Indicatore di caricamento -->
+@if (postService.loading()) {
+  <div class="spinner-border text-primary my-3" role="status"></div>
+}
+
+<!-- Messaggio di errore (es. 404 o Rete assente) -->
+@if (postService.errore()) {
+  <div class="alert alert-danger my-3">
+    {{ postService.errore() }}
+  </div>
+}
+
+<!-- Visualizzazione Post -->
+@if (postService.postCorrente(); as p) {
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between">
+      <span>Post ID #{{ p.id }}</span>
+      <span>Utente {{ p.userId }}</span>
+    </div>
+    <div class="card-body">
+      <h3 class="card-title">{{ p.title }}</h3>
+      <p class="card-text fs-5">{{ p.body }}</p>
+    </div>
+  </div>
+}
+
+<!-- Navigazione Precedente / Successivo -->
+<div class="d-flex justify-content-between mt-4">
+  @if (numericId > 1) {
+    <a [routerLink]="['/posts', numericId - 1]" class="btn btn-outline-primary">&laquo; Precedente</a>
+  } @else {
+    <div></div>
+  }
+
+  <a [routerLink]="['/posts', numericId + 1]" class="btn btn-outline-primary">Successivo &raquo;</a>
+</div>

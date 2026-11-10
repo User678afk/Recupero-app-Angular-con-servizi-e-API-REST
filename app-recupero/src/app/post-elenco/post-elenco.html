@@ -1,0 +1,55 @@
+<h2 class="mb-3">Elenco Post</h2>
+
+<!-- Modulo per la creazione di un nuovo post -->
+<div class="card mb-4">
+  <div class="card-body">
+    <h5 class="card-title">Nuovo Post</h5>
+    <div class="mb-2">
+      <input #titolo class="form-control" placeholder="Titolo..." />
+    </div>
+    <div class="mb-2">
+      <textarea #testo class="form-control" placeholder="Contenuto..." rows="2"></textarea>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="crea(titolo, testo)">Pubblica Post</button>
+  </div>
+</div>
+
+<!-- Indicatori di stato: caricamento ed errore -->
+@if (postService.loading()) {
+  <div class="spinner-border text-primary my-3" role="status"></div>
+}
+
+@if (postService.errore()) {
+  <div class="alert alert-danger my-3">{{ postService.errore() }}</div>
+}
+
+<!-- Campo di ricerca per il filtro -->
+<div class="mb-3">
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Cerca per titolo..."
+    (input)="aggiornaFiltro($event)"
+  />
+</div>
+
+<p class="text-secondary">
+  Post trovati: <strong>{{ totaleFiltrati() }}</strong> su {{ postService.posts().length }}
+</p>
+
+<!-- Elenco dei post -->
+<div class="list-group">
+  @for (p of postsFiltrati(); track p.id) {
+    <a [routerLink]="['/posts', p.id]" class="list-group-item list-group-item-action">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">{{ p.title }}</h5>
+        <small class="text-body-secondary">ID #{{ p.id }}</small>
+      </div>
+      <p class="mb-1 text-truncate">{{ p.body }}</p>
+    </a>
+  } @empty {
+    @if (!postService.loading()) {
+      <div class="list-group-item">Nessun post trovato.</div>
+    }
+  }
+</div>
